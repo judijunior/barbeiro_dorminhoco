@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="styles/styles.css">
+	<title>Barbeiro Adormecido - PPGCA</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<style>
+		@keyframes novo {
+			0%   {left: 0px}
+			100% {left: 180px}
+		}
+		@keyframes cortaBarba {
+			0%   {left: 180px}
+			50% {left: 500px;top: 850px;}
+			100% {left: 500px;top: 850px;}
+		}
+		@keyframes morre {
+			0%   {opacity:1;left:500px;top: 850px;}
+			100% {opacity:0;left:500px;top: 200px;}
+		}
+		#barbeiro{
+			position: absolute;
+			top: 850px;
+			left: 525px;
+			max-width: 120px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<table id="t01">
+		<tr>
+			<th> <button onclick="ChangeLangPor()">Português</button> </th>
+			<th> <button onclick="ChangeLangEng()">English</button>  </th>
+		</tr>
+	</table>
+	<br/>
+	<H1 id="headerE">Barber sleeper</H1>
+	<H1 id="headerP" hidden=true>O Barbeiro Dorminhoco</H1>
+	<br/>
+	<div id=textE>
+		The problem is to simulate the operation of a barber shop with the following characteristics.
+		The barber has a waiting room with chairs and a N shaving chair. If you do not have customers waiting,
+		the barber sits in a chair and sleep. When a customer arrives, he wakes up the barber. If another customer arrives
+		while the barber is working, it takes up a chair and waiting (if you have chairs available).
+		<br/><br/>
+		The following solution uses three semaphores: customers, queue and mutex. The light bar customers the barber, and his
+		"Ghosts" represented by the guests arriving. The value of this signal indicates the number of
+		customers waiting.
+		<br/><br/>
+		The traffic queue lock customers and implements the queue. The semaphore mutex ensures mutual exclusion.
+		an integer variable, qty, which counts the number of customers waiting also is used. The value of this variable
+		It is always equal to the "number of ghosts" semaphore customers.
+		<br/><br/>
+		A customer arriving at the barber shop checks the number of customers waiting. If this number is less than the number
+		chairs, the customer expects, otherwise it will go away.
+		<br/><br/>
+		Initially, the barber gets blocked (sleeping) until the arrival of a customer.
+		<br/><br/>
+		If you have any available chair, the client increments the variable count and performs V operation on the semaphore
+		customers. If the barber is asleep, he is awake. Next, the client releases the mutex and enter
+		in the queue. Barber acquires the mutex, take the first of the queue and will make the cut.
+		<br/><br/>
+		When cutting hair ends, the customer leaves the barber shop and the barber tries to catch
+		a nearby customer. If you have customer, the barber makes another cut. If not, the barber sleeps.
+	</div> <br>
+	<div id="textP" hidden=true>
+		O problema consiste em simular o funcionamento de uma barbearia com as seguintes características.
+		A barbearia tem uma sala de espera com N cadeiras e uma cadeira de barbear. Se não tem clientes à espera,
+		o barbeiro senta numa cadeira e dorme. Quando chega um cliente, ele acorda o barbeiro. Se chega outro cliente
+		enquanto o barbeiro está trabalhando, ele ocupa uma cadeira e espera (se tiver cadeiras disponíveis).
+		<br/><br/>
+		A solução a seguir usa 3 semáforos: clientes, fila e mutex. O semáforo clientes tranca o barbeiro, sendo seus
+		“fantasminhas” representados pelos clientes que chegam. O valor desse semáforo indica o número de
+		clientes à espera.
+		<br/><br/>
+		O semáforo fila tranca os clientes e implementa a fila de espera. O semáforo mutex garante exclusão mútua.
+		Também é usada uma variável inteira, qtd, que conta o número de clientes à espera. O valor desta variável
+		é sempre  igual ao “número de fantasminhas” do semáforo clientes.
+		<br/><br/>
+		Um cliente que chega na barbearia verifica o número de clientes à espera. Se esse número é menor que o número
+		de cadeiras, o cliente espera, caso contrário, ele vai embora.
+		<br/><br/>
+		Inicialmente, o barbeiro fica bloqueado (dormindo) até a chegada de algum cliente.
+		<br/><br/>
+		Se tem alguma cadeira disponível, o cliente incrementa a variável count e executa a operação V no semáforo
+		clientes. Se o barbeiro está dormindo, ele é acordado. A seguir, o cliente libera a exclusão mútua e entra
+		na fila de espera. O barbeiro adquire a	exclusão mútua, pega o primeiro da fila de espera e vai fazer o corte.
+		<br/><br/>
+		Quando termina o corte de cabelo, o cliente deixa a barbearia e o barbeiro tenta pegar
+		um próximo cliente. Se tem cliente, o barbeiro faz outro corte. Se não tem, o barbeiro dorme.
+	</div><br>
+
+	<table id="t01">
+		<tr>
+			<th></th>
+			<th>Animação de demonstração</th>
+			<th></th>
+		</tr>
+
+		<tr>
+			<td>
+				Velocidade de criação de clientes:
+				<select name="cars" id="velCriacao">
+					<option value="4">Lento</option>
+					<option value="2" selected="selected">Médio</option>
+					<option value="0.5">Rápido</option>
+				</select>
+			</td>
+
+			<td>
+				Velocidade de consumo de clientes:
+				<select name="cars" id="velConsumo">
+					<option value="4">Lento</option>
+					<option value="2" selected="selected">Médio</option>
+					<option value="0.5">Rápido</option>
+				</select>
+			</td>
+
+			<td>
+				Probabilidade de entrada de clientes:
+				<select name="cars" id="probabilidade">
+					<option value="10">Baixa</option>
+					<option value="5" selected="selected">Média</option>
+					<option value="2">Alta</option>
+				</select>
+			</td>
+
+		</tr>
+
+		<tr>
+			<td>
+				Quantidade de clientes (entre 1 e 20):
+				<input type="number" id='qtdBonecos' name="quantity" min="1" max="20">
+			</td>
+
+			<td>
+				Quantidade de cadeiras (entre 1 e 5):
+				<input type="number" id='qtdCadeiras' name="quantity" min="1" max="5">
+			</td>
+
+			<td>
+				<div id="comandos">
+					<input type="submit" onclick="inicia('painel')" value="Iniciar"/>
+				</div>
+			</td>
+		</tr>
+
+	</table>
+
+	<div style="width: 100%;margin: auto; text-align: center; height: 600px">
+		<div id="infos" style="display: none;">
+			<br/>
+			Lotação máxima das cadeiras: <span id="lotMax">0</span> - Clientes atendidos: <span id="cliAtendidos">0</span><span id="dormiu"></span>
+		</div>
+
+		<div id='painel'>
+		</div>
+
+		<div id="barbeiro" style="display: none;">
+			<img src="dormindo.jpg" style="width: 100%;"/>
+		</div>
+	</div>
+
+	<script>
+
+		function inicia(elemento){
+			pos = [];
+
+			consumidorOcupado = 0;
+			proximo = 1;
+			qtd = 0;
+			lotMax = 0;
+			atendidos = 0;
+			dormiu = 0;
+			topoDaTela = 680;
+
+			bonecos = document.getElementById("qtdBonecos").value;
+			cadeiras = document.getElementById("qtdCadeiras").value;
+			velCriacao = document.getElementById("velCriacao").value;
+			velConsumo = document.getElementById("velConsumo").value;
+			probabilidade = document.getElementById("probabilidade").value;
+
+			if(bonecos>20){
+				alert('São permitidos no máximo 20 clientes!');
+				return;
+			}
+			if(cadeiras>5){
+				alert('São permitidas no máximo 5 cadeiras!');
+				return;
+			}
+
+			var comandos = document.getElementById("comandos");
+			comandos.setAttribute("style", "display:none");
+			var infos = document.getElementById("infos");
+			infos.setAttribute("style", "display:block");
+			var barbeiro = document.getElementById("barbeiro");
+			barbeiro.setAttribute("style", "display:block");
+
+			for(var x = 1; x <= cadeiras; x++) {
+				pos.push(0);
+				criaCadeiras(x);
+			}
+
+			console.log("Qtd cadeiras: "+pos.length);
+			console.log("Qtd bonecos: "+bonecos);
+
+			u = 0;
+			tempo = 1;
+
+			criaConsome();
+
+		}
+
+		function criaConsome () {
+			setTimeout(function () {
+				console.log('U: '+u);
+				var random = Math.floor(Math.random() * probabilidade + 1);
+				//console.log('Random = '+random);
+				if(random==1){
+					if(u<bonecos) {
+						cria();
+					}
+				}
+
+				consome();
+
+				tempo++;
+
+				//criaConsome();
+				if (atendidos < bonecos) {
+					criaConsome();
+				}else{
+					var painel = document.getElementById("painel");
+					painel.setAttribute("style", "display:none");
+					var dor = document.getElementById("dormiu");
+					dor.innerHTML = '<br/><br/>Barbeiro descansou '+dormiu+' segundos';
+					dor.innerHTML = dor.innerHTML + '<br/><br/><input type="button" value="Resset" onClick="history.go(0)">';
+					var infos = document.getElementById("infos");
+					infos.setAttribute("style", ";width:100%;text-align:center;color:blue;font-size:28px;position:absolute;z-index:20;");
+					infos.innerHTML = '<br/><br/><br/>'+infos.innerHTML;
+					var barbeiro = document.getElementById("barbeiro");
+					barbeiro.setAttribute("style", "display:none");
+				}
+			}, 1000)
+		}
+
+		function cria(){
+			if(cadeiras<=qtd){
+				return;
+			}
+			if(!window.contador){
+				window.contador = 1;
+			}
+
+			if(contador > 20){
+				return;
+			}
+
+			console.log('Criou o '+window.contador);
+
+			var topo = 0;
+			var posicaoVetor = -1;
+			for(xx = 1; xx<=pos.length; xx++){
+				topo = 80;
+				if(pos[xx-1] === 0){
+					topo = topo*xx;
+					topo = topo+topoDaTela;
+					pos[xx-1] = 1;
+					posicaoVetor = xx-1;
+					if(xx > lotMax){
+						lotMax = xx;
+						var lotacao = document.getElementById('lotMax');
+						lotacao.innerHTML = lotMax;
+					}
+					break;
+				}
+			}
+
+			if(topo == 0 || posicaoVetor == -1){
+				return;
+			}
+
+			u++;
+
+			var divNova = document.createElement("div");
+			var elem = document.createElement("img");
+			elem.setAttribute("src", "ghost.gif");
+			elem.setAttribute("style", "max-width:80px; max-height: 80px;");
+			divNova.appendChild(elem);
+			divNova.setAttribute("id", window.contador+"");
+			divNova.setAttribute("style", "width:80px;height:80px;top:"+(topo)+"px;position:absolute;animation: novo "+velCriacao+"s forwards;z-index:10;");
+			divNova.innerHTML = divNova.innerHTML + '<span style="position: absolute; top: 32px; left: 32px; color: #d0f0f8">' + posicaoVetor + '</span>';
+
+			var divAtual = document.getElementById('painel');
+			divAtual.appendChild(divNova);
+
+			setTimeout(function () {
+				qtd++;
+			}, 1000);
+
+			window.contador++;
+		}
+
+		function consome(){
+			if(consumidorOcupado!=1){
+				if(qtd > 0){
+					consumidorOcupado = 1;
+					console.log('Agora deve consumir!!!');
+					var bon = document.getElementById(proximo+'');
+					console.log(proximo);
+					bon.style["animation"] = "cortaBarba "+velConsumo+"s forwards";
+					var barbeiro = document.getElementById("barbeiro");
+					barbeiro.innerHTML = '<img src="cortandoBarba.jpg" style="width: 100%;"/>';
+					var atual = document.getElementById(proximo+'');
+					var posicaoVetor = atual.innerHTML.charAt(atual.innerHTML.length-8);
+					console.log('Morreu o indice vetor: '+posicaoVetor);
+					pos[posicaoVetor] = 0;
+
+					setTimeout(function(){
+						morre(proximo);
+					}, 1000*velConsumo);
+				}else{
+					console.log('Não existe clientes para consumir!!!');
+					dormiu++;
+					var dor = document.getElementById("dormiu");
+					dor.innerHTML = ' - Barbeiro descansou '+dormiu+' segundos';
+					var barbeiro = document.getElementById("barbeiro");
+					barbeiro.innerHTML = '<img src="dormindo.jpg" style="width: 100%;"/>';
+				}
+			}else{
+				console.log('Consumidor ocupado!!!');
+			}
+
+		}
+
+		function morre(id){
+			console.log('MORRE: '+id+'!!!');
+			var atual = document.getElementById(id+'');
+			atual.style.animation = "morre "+velConsumo+"s forwards";
+
+			setTimeout(function(){
+
+				proximo++;
+				consumidorOcupado = 0;
+				qtd--;
+				atendidos++;
+				document.getElementById('cliAtendidos').innerHTML = atendidos+'';
+
+			}, 1000*velConsumo);
+		}
+
+		function criaCadeiras(posicao){
+			if(!window.contadorCadera){
+				window.contadorCadera = 1;
+			}
+
+			if(contadorCadera > 5){
+				return;
+			}
+
+			var topo = 80*posicao;
+
+			topo = topo+topoDaTela;
+
+			var divNova = document.createElement("div");
+			var elem = document.createElement("img");
+			elem.setAttribute("src", "cadeira.jpg");
+			elem.setAttribute("style", "max-width:80px; max-height: 80px;");
+			divNova.appendChild(elem);
+			divNova.setAttribute("id", "cadeira"+window.contadorCadera);
+			divNova.setAttribute("style", "left:178px;width:85px;height:85px;top:"+(topo)+"px;position:absolute;z-index:1");
+
+			var divAtual = document.getElementById('painel');
+			divAtual.appendChild(divNova);
+
+			window.contadorCadera++;
+		}
+
+		function ChangeLangPor(){
+			document.getElementById("headerP").hidden=false;
+			document.getElementById("textP").hidden=false;
+			document.getElementById("textE").hidden=true;
+			document.getElementById("headerE").hidden=true;
+		}
+
+		function ChangeLangEng(){
+			document.getElementById("headerP").hidden=true;
+			document.getElementById("textP").hidden=true;
+			document.getElementById("textE").hidden=false;
+			document.getElementById("headerE").hidden=false;
+		}
+	</script>
+</body>
+</html>
