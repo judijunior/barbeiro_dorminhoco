@@ -6,16 +6,19 @@
 	<title>Barbeiro Adormecido - PPGCA</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<style>
-		@keyframes novo {
-			0%   {left: 0px}
+		@keyframes novo{
+			0%   {left: 0}
 			100% {left: 180px}
 		}
 		@keyframes cortaBarba {
-			0%   {left: 180px}
+			0%   {left: 180px; border: solid red 2px}
+			3%   {left: 180px; border: none}
+			6%   {left: 180px; border: solid red 2px}
+			9%   {left: 180px; border: none}
 			50% {left: 500px;top: 850px;}
 			100% {left: 500px;top: 850px;}
 		}
-		@keyframes morre {
+		@keyframes morre{
 			0%   {opacity:1;left:500px;top: 850px;}
 			100% {opacity:0;left:500px;top: 200px;}
 		}
@@ -229,7 +232,6 @@
 
 				tempo++;
 
-				//criaConsome();
 				if (atendidos < bonecos) {
 					criaConsome();
 				}else{
@@ -248,7 +250,7 @@
 		}
 
 		function cria(){
-			if(cadeiras<=qtd){
+			if(qtd>=cadeiras){
 				return;
 			}
 			if(!window.contador){
