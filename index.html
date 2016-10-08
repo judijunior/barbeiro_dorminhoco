@@ -7,26 +7,36 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<style>
 		@keyframes novo{
-			0%   {left: 0}
-			100% {left: 180px}
+			0%   {left: 0; top: 580px}
+			70%  {left: 230px; top: 580px}
+			90%  {left: 230px;}
+			100% {left: 380px;}
 		}
 		@keyframes cortaBarba {
-			0%   {left: 180px; border: solid red 2px}
-			3%   {left: 180px; border: none}
-			6%   {left: 180px; border: solid red 2px}
-			9%   {left: 180px; border: none}
-			50% {left: 500px;top: 850px;}
-			100% {left: 500px;top: 850px;}
+			0%   {left: 380px; border: solid red 2px}
+			3%   {left: 380px; border: none}
+			6%   {left: 380px; border: solid red 2px}
+			9%   {left: 380px; border: none}
+			50% {left: 750px;top: 805px;}
+			100% {left: 750px;top: 805px;}
 		}
 		@keyframes morre{
-			0%   {opacity:1;left:500px;top: 850px;}
-			100% {opacity:0;left:500px;top: 200px;}
+			0%   {opacity:1;left:750px;top: 805px;}
+			20%  {opacity: 1; left: 730px; top: 805px}
+			50%  {opacity: 1; left: 730px; top: 580px}
+			100% {opacity:0;left:730px;top: 200px;}
 		}
 		#barbeiro{
 			position: absolute;
-			top: 850px;
-			left: 525px;
+			top: 800px;
+			left: 740px;
 			max-width: 120px;
+			z-index: 8;
+		}
+		#cenario{
+			position: absolute;
+			top: 640px;
+			left: 130px;
 		}
 	</style>
 </head>
@@ -40,7 +50,7 @@
 		</tr>
 	</table>
 	<br/>
-	<H1 id="headerE">Barber sleeper</H1>
+	<H1 id="headerE">Sleeper Barber</H1>
 	<H1 id="headerP" hidden=true>O Barbeiro Dorminhoco</H1>
 	<br/>
 	<div id=textE>
@@ -85,9 +95,8 @@
 		<br/><br/>
 		Um cliente que chega na barbearia verifica o número de clientes à espera. Se esse número é menor que o número
 		de cadeiras, o cliente espera, caso contrário, ele vai embora.
-		<br/><br/>
 		Inicialmente, o barbeiro fica bloqueado (dormindo) até a chegada de algum cliente.
-		<br/><br/>
+		<br/>
 		Se tem alguma cadeira disponível, o cliente incrementa a variável count e executa a operação V no semáforo
 		clientes. Se o barbeiro está dormindo, ele é acordado. A seguir, o cliente libera a exclusão mútua e entra
 		na fila de espera. O barbeiro adquire a	exclusão mútua, pega o primeiro da fila de espera e vai fazer o corte.
@@ -96,64 +105,62 @@
 		um próximo cliente. Se tem cliente, o barbeiro faz outro corte. Se não tem, o barbeiro dorme.
 	</div><br>
 
-	<table id="t01">
-		<tr>
-			<th></th>
-			<th>Animação de demonstração</th>
-			<th></th>
-		</tr>
+	<div style="background-color: black;width: 800px; color: white; margin: auto; font-weight: bold; height: 28px;text-align: center">
+		<span style="font-size: 20px; margin-top: 4px; margin-bottom: 4px;">Animação de demonstração</span>
+	</div>
 
-		<tr>
-			<td>
-				Velocidade de criação de clientes:
-				<select name="cars" id="velCriacao">
-					<option value="4">Lento</option>
-					<option value="2" selected="selected">Médio</option>
-					<option value="0.5">Rápido</option>
-				</select>
-			</td>
+	<div id="comandos" style="width: 100%; text-align: center">
 
-			<td>
-				Velocidade de consumo de clientes:
-				<select name="cars" id="velConsumo">
-					<option value="4">Lento</option>
-					<option value="2" selected="selected">Médio</option>
-					<option value="0.5">Rápido</option>
-				</select>
-			</td>
+		<table id="t01">
+			<tr>
+				<td>
+					Velocidade de chegada de clientes:
+					<select name="cars" id="velCriacao">
+						<option value="4">Lento</option>
+						<option value="2" selected="selected">Médio</option>
+						<option value="0.5">Rápido</option>
+					</select>
+				</td>
 
-			<td>
-				Probabilidade de entrada de clientes:
-				<select name="cars" id="probabilidade">
-					<option value="10">Baixa</option>
-					<option value="5" selected="selected">Média</option>
-					<option value="2">Alta</option>
-				</select>
-			</td>
+				<td>
+					Velocidade do corte de cabelo:
+					<select name="cars" id="velConsumo">
+						<option value="4">Lento</option>
+						<option value="2" selected="selected">Médio</option>
+						<option value="0.5">Rápido</option>
+					</select>
+				</td>
+				<!--
+				<td>
+					Probabilidade de entrada de clientes:
+					<select name="cars" id="probabilidade">
+						<option value="10">Baixa</option>
+						<option value="5" selected="selected">Média</option>
+						<option value="2">Alta</option>
+					</select>
+				</td>
+				-->
+			</tr>
 
-		</tr>
+			<tr>
+				<td>
+					Quantidade de clientes (entre 1 e 20):
+					<input type="number" id='qtdBonecos' name="quantity" min="1" max="20">
+				</td>
 
-		<tr>
-			<td>
-				Quantidade de clientes (entre 1 e 20):
-				<input type="number" id='qtdBonecos' name="quantity" min="1" max="20">
-			</td>
+				<td>
+					Quantidade de cadeiras (entre 1 e 5):
+					<input type="number" id='qtdCadeiras' name="quantity" min="1" max="5">
+				</td>
+			</tr>
 
-			<td>
-				Quantidade de cadeiras (entre 1 e 5):
-				<input type="number" id='qtdCadeiras' name="quantity" min="1" max="5">
-			</td>
+		</table>
 
-			<td>
-				<div id="comandos">
-					<input type="submit" onclick="inicia('painel')" value="Iniciar"/>
-				</div>
-			</td>
-		</tr>
+		<input type="submit" onclick="inicia('painel')" value="Iniciar" style="width: 60%; height: 25px"/>
 
-	</table>
+	</div>
 
-	<div style="width: 100%;margin: auto; text-align: center; height: 600px">
+	<div style="width: 100%;margin: auto; text-align: center; height: 600px;">
 		<div id="infos" style="display: none;">
 			<br/>
 			Lotação máxima das cadeiras: <span id="lotMax">0</span> - Clientes atendidos: <span id="cliAtendidos">0</span><span id="dormiu"></span>
@@ -162,10 +169,22 @@
 		<div id='painel'>
 		</div>
 
-		<div id="barbeiro" style="display: none;">
-			<img src="dormindo.jpg" style="width: 100%;"/>
+		<div id="barbeiro" style="display: none">
+			<img src="dormindo.jpg" style="width: 100%"/>
+		</div>
+		<div id="cenario" style="display: none;z-index: 1;">
+			<img src="barbearia.jpg" style="width: 100%"/>
 		</div>
 	</div>
+
+	<footer>
+		<br/>
+		<br/>
+		<br/>
+		<p>Created by: Judimar Jr Canal Brescansin</p>
+		<p>PPGCA</p>
+		<p>Contact information: <a href="mailto:junior@atualy.com.br">junior@atualy.com.br</a>.</p>
+	</footer>
 
 	<script>
 
@@ -178,13 +197,14 @@
 			lotMax = 0;
 			atendidos = 0;
 			dormiu = 0;
-			topoDaTela = 680;
+			topoDaTela = 620;
 
 			bonecos = document.getElementById("qtdBonecos").value;
 			cadeiras = document.getElementById("qtdCadeiras").value;
 			velCriacao = document.getElementById("velCriacao").value;
 			velConsumo = document.getElementById("velConsumo").value;
-			probabilidade = document.getElementById("probabilidade").value;
+			//probabilidade = document.getElementById("probabilidade").value;
+			probabilidade = 4;
 
 			if(bonecos>20){
 				alert('São permitidos no máximo 20 clientes!');
@@ -201,6 +221,8 @@
 			infos.setAttribute("style", "display:block");
 			var barbeiro = document.getElementById("barbeiro");
 			barbeiro.setAttribute("style", "display:block");
+			var cenario = document.getElementById("cenario");
+			cenario.setAttribute("style", "display:block");
 
 			for(var x = 1; x <= cadeiras; x++) {
 				pos.push(0);
@@ -237,12 +259,15 @@
 				}else{
 					var painel = document.getElementById("painel");
 					painel.setAttribute("style", "display:none");
+					var cenario = document.getElementById("cenario");
+					cenario.setAttribute("style", "display:none");
 					var dor = document.getElementById("dormiu");
 					dor.innerHTML = '<br/><br/>Barbeiro descansou '+dormiu+' segundos';
 					dor.innerHTML = dor.innerHTML + '<br/><br/><input type="button" value="Resset" onClick="history.go(0)">';
 					var infos = document.getElementById("infos");
 					infos.setAttribute("style", ";width:100%;text-align:center;color:blue;font-size:28px;position:absolute;z-index:20;");
 					infos.innerHTML = '<br/><br/><br/>'+infos.innerHTML;
+					infos.innerHTML = infos.innerHTML+'<br/><br/>'+'<span style="color: red">Clique em \"Resset\" para reiniciar a animação!</span>';
 					var barbeiro = document.getElementById("barbeiro");
 					barbeiro.setAttribute("style", "display:none");
 				}
@@ -289,7 +314,7 @@
 
 			var divNova = document.createElement("div");
 			var elem = document.createElement("img");
-			elem.setAttribute("src", "ghost.gif");
+			elem.setAttribute("src", "ghostCabeludo.gif");
 			elem.setAttribute("style", "max-width:80px; max-height: 80px;");
 			divNova.appendChild(elem);
 			divNova.setAttribute("id", window.contador+"");
@@ -341,6 +366,11 @@
 		function morre(id){
 			console.log('MORRE: '+id+'!!!');
 			var atual = document.getElementById(id+'');
+			atual.removeChild(atual.firstElementChild);
+			var elem = document.createElement("img");
+			elem.setAttribute("src", "ghost.gif");
+			elem.setAttribute("style", "max-width:80px; max-height: 80px;");
+			atual.appendChild(elem);
 			atual.style.animation = "morre "+velConsumo+"s forwards";
 
 			setTimeout(function(){
@@ -373,7 +403,7 @@
 			elem.setAttribute("style", "max-width:80px; max-height: 80px;");
 			divNova.appendChild(elem);
 			divNova.setAttribute("id", "cadeira"+window.contadorCadera);
-			divNova.setAttribute("style", "left:178px;width:85px;height:85px;top:"+(topo)+"px;position:absolute;z-index:1");
+			divNova.setAttribute("style", "left:378px;width:85px;height:85px;top:"+(topo)+"px;position:absolute;z-index:1");
 
 			var divAtual = document.getElementById('painel');
 			divAtual.appendChild(divNova);
