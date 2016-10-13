@@ -7,9 +7,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<style>
 		@keyframes novo{
-			0%   {left: 0; top: 580px}
-			70%  {left: 230px; top: 580px}
-			90%  {left: 230px;}
+			0%   {left: 150px; top: 580px; opacity: 0}
+			30%  {left: 230px; top: 580px; opacity: 1}
+			70%  {left: 230px;}
 			100% {left: 380px;}
 		}
 		@keyframes cortaBarba {
@@ -25,6 +25,12 @@
 			20%  {opacity: 1; left: 730px; top: 805px}
 			50%  {opacity: 1; left: 730px; top: 580px}
 			100% {opacity:0;left:730px;top: 200px;}
+		}
+		@keyframes desiste{
+			0%    {left: 150px; top: 580px; opacity: 1}
+			30%   {left: 230px; top: 580px; opacity: 1}
+			70%   {left: 730px; top: 540px; opacity: 1}
+			100%  {left: 730px; top: 200px; opacity: 0; display: none}
 		}
 		#barbeiro{
 			position: absolute;
@@ -163,7 +169,10 @@
 	<div style="width: 100%;margin: auto; text-align: center; height: 600px;">
 		<div id="infos" style="display: none;">
 			<br/>
-			Lotação máxima das cadeiras: <span id="lotMax">0</span> - Clientes atendidos: <span id="cliAtendidos">0</span><span id="dormiu"></span>
+			Lotação máxima das cadeiras: <span id="lotMax">0</span>
+			- Clientes atendidos: <span id="cliAtendidos">0</span>
+			- Desistências: <span id="cliDesistiram">0</span>
+			<span id="dormiu"></span>
 		</div>
 
 		<div id='painel'>
@@ -198,13 +207,14 @@
 			atendidos = 0;
 			dormiu = 0;
 			topoDaTela = 620;
+			desistiram = 100;
 
 			bonecos = document.getElementById("qtdBonecos").value;
 			cadeiras = document.getElementById("qtdCadeiras").value;
 			velCriacao = document.getElementById("velCriacao").value;
 			velConsumo = document.getElementById("velConsumo").value;
 			//probabilidade = document.getElementById("probabilidade").value;
-			probabilidade = 4;
+			probabilidade = 3;
 
 			if(bonecos>20){
 				alert('São permitidos no máximo 20 clientes!');
@@ -233,7 +243,6 @@
 			console.log("Qtd bonecos: "+bonecos);
 
 			u = 0;
-			tempo = 1;
 
 			criaConsome();
 
@@ -246,13 +255,15 @@
 				//console.log('Random = '+random);
 				if(random==1){
 					if(u<bonecos) {
-						cria();
+						if(qtd>=cadeiras){
+							criaDesiste();
+						}else{
+							cria();
+						}
 					}
 				}
 
 				consome();
-
-				tempo++;
 
 				if (atendidos < bonecos) {
 					criaConsome();
@@ -271,13 +282,23 @@
 					var barbeiro = document.getElementById("barbeiro");
 					barbeiro.setAttribute("style", "display:none");
 				}
-			}, 1000)
+			}, 500)
 		}
 
 		function cria(){
-			if(qtd>=cadeiras){
+			var des = 0;
+			for(h = 0; h<pos.length; h++){
+				if(pos[h]==1){
+					des++;
+				}
+			}
+
+			if(des==pos.length){
 				return;
 			}
+//			if(qtd>=cadeiras){
+//				return;
+//			}
 			if(!window.contador){
 				window.contador = 1;
 			}
@@ -353,7 +374,7 @@
 					console.log('Não existe clientes para consumir!!!');
 					dormiu++;
 					var dor = document.getElementById("dormiu");
-					dor.innerHTML = ' - Barbeiro descansou '+dormiu+' segundos';
+					dor.innerHTML = ' - Barbeiro descansou '+(parseInt(dormiu/2))+' segundos';
 					var barbeiro = document.getElementById("barbeiro");
 					barbeiro.innerHTML = '<img src="dormindo.jpg" style="width: 100%;"/>';
 				}
@@ -382,6 +403,36 @@
 				document.getElementById('cliAtendidos').innerHTML = atendidos+'';
 
 			}, 1000*velConsumo);
+		}
+
+		function criaDesiste() {
+			var des = 0;
+			for(h = 0; h<pos.length; h++){
+				if(pos[h]==1){
+					des++;
+				}
+			}
+
+			var random = Math.floor(Math.random() * probabilidade + 1);
+
+			if(des==pos.length && random==1){
+				console.log("CRIOU UM QUE DESISTIU");
+				var divNova = document.createElement("div");
+				var elem = document.createElement("img");
+				elem.setAttribute("src", "ghostCabeludo.gif");
+				elem.setAttribute("style", "max-width:80px; max-height: 80px;");
+				divNova.appendChild(elem);
+				divNova.setAttribute("id", desistiram+"");
+				divNova.setAttribute("style", "width:80px;height:80px;position:absolute;animation: desiste 3s forwards;z-index:10;");
+
+				var divAtual = document.getElementById('painel');
+				divAtual.appendChild(divNova);
+
+				desistiram++;
+				bonecos--;
+
+				document.getElementById('cliDesistiram').innerHTML = (desistiram-100)+'';
+			}
 		}
 
 		function criaCadeiras(posicao){
